@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Шифр виженера</title>
+</head>
+<body>
+    <h1>Шифр Вижернера</h1>
+    <form method="post">
+        <label for="text">Текст:</label><br>
+        <textarea name="text" id="text"></textarea><br>
+        <label for="key">Ключ:</label><br>
+        <input type="text" name="key"><br>
+        <input type="radio" name="action" value="encrypt" checked> шифровать
+        <input type="radio" name="action" value="decrypt"> Расшифровать<br>
+        <input type="submit" value="Submit">
+    </form>
+    {% if result %}
+        <h2>Result:</h2>
+        <p>{{ result }}</p>
+    {% endif %}
+</body>
+</html>
