@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Добро пожаловать</title>
+    <style>
+        body {
+            background-color: #000; /* Черный фон */
+            color: #fff; /* Белый текст */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #555;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #777;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+   <h1>Добро пожаловать, {{ username }}!</h1>
+    <a href="/user_list"><button>список пользователей</button></a>
+    <a href="/shifr"><button>шифрование</button></a>
+    <a href="/encryption_history/123"><button>история сессии 123</button></a>
+    <a href="/encryption_history/admin"><button>история сессии admin</button></a>
+    <a href="/encryption_history/{{username}}"><button>история</button></a>
+    <a href="/logout"><button>Выйти</button></a>
+
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Шифр Виженера</title>
+    <style>
+        body {
+            background-color: #fff; /* Белый фон */
+            color: #000; /* Черный текст */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        /* Остальные стили */
+        .container {
+            position: relative;
+            min-height: 100vh;
+        }
+        .logout-button {
+
+            position: absolute;
+            bottom: 20px;
+            left: 50%; /* Центрирование по горизонтали */
+            transform: translateX(-50%); /* Смещение кнопки на половину ее ширины влево */
+            background-color: #444; /* Серый фон кнопки */
+            color: #fff; /* Белый текст */
+            text-transform: uppercase; /* Все буквы заглавные */
+            font-weight: bold; /* Жирный шрифт */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .logout-button:hover {
+            background-color: #666;
+        }
+    </style>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var methodSelect = document.getElementById('method');
+            var keyInput = document.getElementById('key');
+
+            function updateKeyInput() {
+                // Если выбран метод Цезаря, устанавливаем тип поля ввода 'number'
+                if (methodSelect.value === 'caesar') {
+                    keyInput.type = 'number';
+                    keyInput.pattern = '\\d*'; // Разрешаем только цифры
+                } else {
+                    keyInput.type = 'text';
+                    keyInput.removeAttribute('pattern');
+                }
+            }
+
+            // Обновляем поле ввода при изменении метода шифрования
+            methodSelect.addEventListener('change', updateKeyInput);
+
+            // Обновляем поле ввода при загрузке страницы
+            updateKeyInput();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Шифр Вижернера</h1>
+        <form method="post">
+            <label for="method">Метод шифрования:</label>
+            <select name="method" id="method">
+                <option value="vigenere">Шифр Вижинера</option>
+                <option value="caesar">Шифр Цезаря</option>
+            </select>
+            <label for="text">Текст:</label><br>
+            <textarea name="text" id="text" required ></textarea><br>
+            <label for="key">Ключ:</label><br>
+            <input type="text" name="key" id="key" required pattern="\\d*"><br>
+            <input type="radio" name="action" value="encrypt" checked> шифровать
+            <input type="radio" name="action" value="decrypt"> Расшифровать<br>
+            <input type="submit" value="Ок">
+                {% if result %}
+                    <h2>Результат:</h2>
+                    <p>{{ result }}</p>
+                {% endif %}
+          <a href="/lobby" class="logout-button">Назад в лобби</a>
+        </div>
+    </form>
+
+
+
+</body>
+</html>

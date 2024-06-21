@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список пользователей</title>
+    <style>
+        body {
+            background-color: #000; /* Черный фон */
+            color: #fff; /* Белый текст */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-image 0.3s ease;
+        }
+        a:hover {
+            background-image: linear-gradient(135deg, #c94b4b, #4b134f);
+        }
+        .logout-button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Список пользователей</h1>
+    <ul>
+        {% for user in users %}
+            <li>{{ user }} </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('lobby') }}" class="logout-button">Выйти в лобби</a>
+</body>
+</html>
