@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Взлом шифра Цезаря</title>
+</head>
+<body>
+    <h1>Взлом шифра Цезаря</h1>
+    <form action="/hack_caesar" method="post">
+        <label for="user_id">Выберите пользователя:</label>
+        <select name="user_id" id="user_id">
+            {% for user in users %}
+            <option value="{{ user }}">{{ user }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="data_in">зашифрованный текст:</label>
+        <input type="text" id="data_in" name="data_in" required>
+        <br>
+        <label for="keyword">Ключевое слово:</label>
+        <input type="text" id="keyword" name="keyword">
+        <br>
+        <input type="submit" value="Взломать">
+    </form>
+</body>
+</html>

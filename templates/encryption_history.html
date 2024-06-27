@@ -80,7 +80,7 @@
             <td>{{ record.text }}</td>
             <td>{{ record.result }}</td>
             <td>{{ record.display_method }}</td>
-            <td>{{ 'Шифрование' if record.action == 'encrypt' else 'Дешифрование' }}</td>
+            <td>{{ 'Шифрование' if record.action == 'encrypt' else 'Взлом' if record.action == 'hack' else 'Дешифрование' }}</td>
             <td>{{ record.timestamp }}</td>
             <td>{{ record.username }}</td>
         </tr>

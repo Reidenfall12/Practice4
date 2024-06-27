@@ -1,17 +1,23 @@
-from flask import Flask, request, redirect, render_template, session, url_for
+from flask import Flask, request, redirect, render_template, session, url_for ,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+import time
+import itertools
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '12'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
+session_id_counter = 0
+sessions = {}
 
 
 ALPHABET = ',.:(_)-0123456789АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
 
 class User(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
@@ -37,6 +43,8 @@ def create_tables():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
 
 @app.route('/delete_user/<username>')
 def delete_user(username):
@@ -181,6 +189,104 @@ def user_list():
         return render_template('user_list.html', users=[user.username for user in users])
     else:
         return redirect(url_for('login'))
+
+
+@app.route('/hack_caesar', methods=['GET'])
+def hack_caesar_form():
+    # Получение списка пользователей из базы данных
+    users = User.query.with_entities(User.username).all()
+    return render_template('hack_caesar.html', users=[user.username for user in users])
+
+@app.route('/hack_caesar', methods=['POST'])
+def hack_caesar():
+    data = request.form
+    user_id = data['user_id']
+    data_in = data['data_in']
+    keyword = data['keyword']
+
+
+    user = User.query.filter_by(username=user_id).first()
+    if user and len(data_in) <= 1000:
+        data_in_filtered = ''.join([c for c in data_in.upper() if c in ALPHABET])
+        possible_results = []
+
+
+        for shift in range(len(ALPHABET)):
+            decrypted_text = caesar_cipher(data_in_filtered, shift, encrypt=False)
+            if keyword.upper() in decrypted_text:
+                possible_results.append({'shift': shift, 'decrypted_text': decrypted_text})
+
+
+        hack_entry = EncryptionHistory(
+            username=user.username,
+            text=data_in,
+            result=','.join([res['decrypted_text'] for res in possible_results]),
+            method='Caesar',
+            action='hack',
+
+        )
+        db.session.add(hack_entry)
+        db.session.commit()
+        return render_template('hack_results1.html', results=possible_results, username=user.username)
+    else:
+        return jsonify({"message": "Invalid input"}), 400
+
+
+@app.route('/hack_vigenere', methods=['GET'])
+def hack_vigenere_form():
+    # Получение списка пользователей из базы данных
+    users = User.query.with_entities(User.username).all()
+    return render_template('hack_vigenere.html', users=[user.username for user in users])
+
+@app.route('/hack_vigenere', methods=['POST'])
+def hack_vigenere():
+    global session_id_counter
+    data = request.form
+    user_id = data['user_id']
+    data_in = data['data_in']
+    keyword = data['keyword']
+    parent_id = data.get('parent_id')
+
+    # Проверка наличия пользователя в базе данных
+    user = User.query.filter_by(username=user_id).first()
+    if user and len(data_in) <= 1000:
+        data_in_filtered = ''.join([c for c in data_in.upper() if c in ALPHABET])
+        possible_results = []
+        start_time = time.time()
+
+        # Оптимизированный взлом шифра Виженера
+        key_lengths = range(1, min(4, len(data_in_filtered) + 1))  # Ограничение длины ключа для оптимизации
+
+        def generate_vigenere_keys():
+            for key_length in key_lengths:
+                for key_tuple in itertools.product(ALPHABET, repeat=key_length):
+                    yield ''.join(key_tuple)
+
+        for key in generate_vigenere_keys():
+            decrypted_text = vigenere_cipher(data_in_filtered, key, encrypt=False)
+            if keyword.upper() in decrypted_text:  # Проверка на ключевое слово
+                possible_results.append({'key': key, 'decrypted_text': decrypted_text})
+                if len(possible_results) >= 10:  # Ограничение количества результатов для экономии памяти
+                    break
+
+        if user and len(data_in) <= 1000:
+
+
+            # Запись результатов в базу данных
+            for result in possible_results:
+                history_entry = EncryptionHistory(
+                    username=user.username,
+                    text=data_in,
+                    result=result['decrypted_text'],
+                    method='Vigenere',
+                    action='hack'
+                )
+                db.session.add(history_entry)
+
+            db.session.commit()
+        return render_template('hack_results.html', results=possible_results, username=user.username)
+    else:
+        return jsonify({"message": "Invalid input"}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
