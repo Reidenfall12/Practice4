@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шифр Виженера</title>
+    <style>
+        body {
+            background-color: #000 /* Светло-серый фон */
+            color: white; /* Темно-серый текст */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            color: #444;
+            margin-bottom: 2rem;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 1rem;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #5cb85c; /* Зеленый фон */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #4cae4c; /* Темно-зеленый фон */
+        }
+        .logout-button {
+            /* Стили кнопки выхода */
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #d9534f; /* Красный фон */
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .logout-button:hover {
+            background-color: #c9302c; /* Темно-красный фон */
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var methodSelect = document.getElementById('method');
+            var keyInput = document.getElementById('key');
+
+            function updateKeyInput() {
+
+                if (methodSelect.value === 'caesar') {
+                    keyInput.type = 'number';
+                    keyInput.pattern = '\\d*'; //
+                } else {
+                    keyInput.type = 'text';
+                    keyInput.removeAttribute('pattern');
+                }
+            }
+
+            // Обновляем поле ввода при изменении метода шифрования
+            methodSelect.addEventListener('change', updateKeyInput);
+
+            // Обновляем поле ввода при загрузке страницы
+            updateKeyInput();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Шифр Вижернера</h1>
+
+        <form method="post">
+            <label for="method">Метод шифрования:</label>
+            <select name="method" id="method">
+                <option value="vigenere">Шифр Вижинера</option>
+                <option value="caesar">Шифр Цезаря</option>
+            </select>
+            <label for="text">Текст:</label>
+            <textarea pattern="ABCDEFGHIJKLMNOPQRSTUVWXYZ" name="text" id="text" required></textarea>
+
+            <label for="key">Ключ:</label>
+
+
+            <input type="text" name="key" id="key" pattern="ABCDEFGHIJKLMNOPQRSTUVWXYZ" title="Ввод символов англ букв запрещен" required pattern="\\d*">
+            <div>
+                <input type="radio" name="action" value="encrypt" checked> Шифровать
+                <input type="radio" name="action" value="decrypt"> Расшифровать
+            </div>
+            <input type="submit" value="Ок">
+            {% if result %}
+                <h2>Результат:</h2>
+                <p>{{ result }}</p>
+            {% endif %}
+            <a href="/lobby" class="logout-button">Назад в лобби</a>
+        </form>
+    </div>
+</body>
+</html>

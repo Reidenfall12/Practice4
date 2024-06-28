@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты взлома</title>
+</head>
+<body>
+    <h1>Результаты взлома</h1>
+    {% if results %}
+        <ul>
+            {% for result in results %}
+                <li>Сдвиг(кол-во): {{ result.key }}, Расшифрованный текст: {{ result.decrypted_text }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Неверные данные.</p>
+    {% endif %}
+    <a href="/lobby" >Назад</a>
+</body>
+</html>
