@@ -6,10 +6,15 @@
 </head>
 <body>
     <h1>Результаты взлома</h1>
-    <ul>
-        {% for result in results %}
-        <li>Ключ: {{ result.key }}, Расшифрованный текст: {{ result.decrypted_text }}</li>
-        {% endfor %}
-    </ul>
+    {% if results %}
+        <ul>
+            {% for result in results %}
+                <li>Сдвиг(кол-во): {{ result.key }}, Расшифрованный текст: {{ result.decrypted_text }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Неверные данные.</p>
+    {% endif %}
+    <a href="/lobby" >Назад</a>
 </body>
 </html>
